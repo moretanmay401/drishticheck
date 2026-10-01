@@ -2,10 +2,9 @@
  * DrishtiCheck | API client
  * Smart India Hackathon 2026 | Idea ID 146687 | Team ID 156249 | Team Drishti Check
  *
- * All calls use relative /api URLs (proxied to FastAPI by vite.config.js).
- * To point at a deployed backend, set VITE_API_BASE=https://your-host in .env.
+ * All calls target the live production backend on Render.
  */
-const API_BASE = (import.meta.env.VITE_API_BASE ?? '').replace(/\/$/, '');
+const API_BASE = 'https://drishticheck.onrender.com';
 
 /** Turns a backend path (/api/...) into a full URL; leaves blob:, data: and http(s): URLs alone. */
 export const assetUrl = (path = '') => (/^(https?:|blob:|data:)/.test(path) ? path : `${API_BASE}${path}`);
