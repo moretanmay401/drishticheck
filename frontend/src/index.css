@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-ink-950 font-sans text-slate-200 antialiased;
+    min-height: 100vh;
+    /* Soft tricolour glow: saffron top-right, chakra blue top-left, green bottom */
+    background-image:
+      radial-gradient(900px 520px at 6% -8%, rgba(111, 134, 255, 0.2), transparent 60%),
+      radial-gradient(700px 460px at 100% 0%, rgba(255, 153, 51, 0.11), transparent 60%),
+      radial-gradient(760px 520px at 55% 112%, rgba(19, 136, 8, 0.12), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  :focus-visible {
+    outline: 2px solid #ff9933;
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: rgba(255, 153, 51, 0.35);
+  }
+}
+
+@layer components {
+  /* Glassmorphism surface */
+  .glass {
+    @apply rounded-2xl border border-white/10 bg-white/[0.045] backdrop-blur-xl;
+    box-shadow:
+      0 14px 44px -14px rgba(0, 0, 0, 0.65),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-xs text-slate-300;
+  }
+}
+
+@layer utilities {
+  .font-wide {
+    font-stretch: 112%;
+  }
+}
+
+/* Scan line shown while the OpenCV + OCR stage runs */
+@keyframes drishti-scan {
+  from {
+    top: 0%;
+  }
+  to {
+    top: 100%;
+  }
+}
+
+.scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #ff9933 25%, #ffffff 50%, #138808 75%, transparent);
+  box-shadow: 0 0 22px 6px rgba(255, 153, 51, 0.45);
+  animation: drishti-scan 1.5s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scanline {
+    animation: none;
+    top: 50%;
+  }
+}
+
+/* Slim scrollbars inside glass panels */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}

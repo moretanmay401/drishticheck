@@ -1,0 +1,6 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+# Optional: lets the API really decode uploads and measure sharpness with OpenCV.
+opencv-python-headless>=4.9
+numpy>=1.26
