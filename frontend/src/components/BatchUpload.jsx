@@ -106,17 +106,24 @@ export default function BatchUpload({
       onAnalysisStart();
       try {
         const [payload] = await Promise.all([analyzeFiles(files), wait(PROCESSING_MS)]);
+        if (!payload || !Array.isArray(payload.results) || payload.results.length === 0) {
+          throw new Error('Analysis response did not contain detection results.');
+        }
         const stamp = Date.now().toString(36).toUpperCase();
         // Object URLs live for the whole session so history rows can reopen these images.
-        const items = files.map((file, index) => ({
-          id: `LIVE-${stamp}-${index + 1}`,
-          name: file.name,
-          src: URL.createObjectURL(file),
-          result: payload.results[index],
-        }));
+        const items = files.map((file, index) => {
+          const result = payload.results[index] || payload.results[0];
+          return {
+            id: `LIVE-${stamp}-${index + 1}`,
+            name: file.name,
+            src: URL.createObjectURL(file),
+            result,
+          };
+        });
         onBatchComplete(items);
       } catch (err) {
-        onAnalysisError(err.message);
+        // Prevent silently substituting demo labels on failure; surface the exact error to user
+        onAnalysisError(err.message || 'Analysis failed. Please check network or file format.');
       }
     },
     [onAnalysisStart, onBatchComplete, onAnalysisError],

@@ -4,17 +4,19 @@
  *
  * All calls target the live production backend on Render.
  */
-const API_BASE = 'https://drishticheck.onrender.com';
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://drishticheck.onrender.com';
 
 /** Turns a backend path (/api/...) into a full URL; leaves blob:, data: and http(s): URLs alone. */
 export const assetUrl = (path = '') => (/^(https?:|blob:|data:)/.test(path) ? path : `${API_BASE}${path}`);
 
-async function request(path, options) {
+async function request(path, options = {}) {
   let response;
   try {
     response = await fetch(`${API_BASE}${path}`, options);
-  } catch {
-    throw new Error('Cannot reach the DrishtiCheck API. Start it with: uvicorn main:app --reload --port 8000');
+  } catch (err) {
+    throw new Error(
+      `Cannot reach the DrishtiCheck API at ${API_BASE}. ${err.message || 'Network error or service unavailable.'}`
+    );
   }
   if (!response.ok) {
     let detail = `Request failed with status ${response.status}.`;
